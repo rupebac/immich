@@ -1,15 +1,16 @@
-import { Asset } from '../cores/models/asset';
-import { CrawlService } from '../services';
-import { UploadOptionsDto } from '../cores/dto/upload-options-dto';
-import { CrawlOptionsDto } from '../cores/dto/crawl-options-dto';
+import {Asset} from '../cores/models/asset';
+import {CrawlService} from '../services';
+import {UploadOptionsDto} from '../cores/dto/upload-options-dto';
+import {CrawlOptionsDto} from '../cores/dto/crawl-options-dto';
 
 import cliProgress from 'cli-progress';
 import byteSize from 'byte-size';
-import { BaseCommand } from '../cli/base-command';
-import axios, { AxiosRequestConfig } from 'axios';
+import {BaseCommand} from '../cli/base-command';
+import axios, {AxiosRequestConfig} from 'axios';
 import FormData from 'form-data';
 
 export default class Upload extends BaseCommand {
+  private crawlService = new CrawlService();
   uploadLength!: number;
 
   public async run(paths: string[], options: UploadOptionsDto): Promise<void> {
@@ -17,14 +18,12 @@ export default class Upload extends BaseCommand {
 
     const deviceId = 'CLI';
 
-    const crawlService = new CrawlService();
-
     const crawlOptions = new CrawlOptionsDto();
     crawlOptions.pathsToCrawl = paths;
     crawlOptions.recursive = options.recursive;
     crawlOptions.exclusionPatterns = options.exclusionPatterns;
 
-    const crawledFiles: string[] = await crawlService.crawl(crawlOptions);
+    const crawledFiles: string[] = await this.crawlService.crawl(crawlOptions);
 
     if (crawledFiles.length === 0) {
       console.log('No assets found, exiting');
