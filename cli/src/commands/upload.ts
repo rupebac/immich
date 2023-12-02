@@ -17,8 +17,7 @@ export default class Upload extends BaseCommand {
 
     const deviceId = 'CLI';
 
-    const formatResponse = await this.immichApi.serverInfoApi.getSupportedMediaTypes();
-    const crawlService = new CrawlService(formatResponse.data.image, formatResponse.data.video);
+    const crawlService = new CrawlService();
 
     const crawlOptions = new CrawlOptionsDto();
     crawlOptions.pathsToCrawl = paths;
